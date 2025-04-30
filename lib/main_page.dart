@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class MainPage extends StatefulWidget {
   @override
   MainPageState createState() => MainPageState();
@@ -9,11 +8,11 @@ class MainPage extends StatefulWidget {
 class MainPageState extends State<MainPage> {
   int _selectedIndex = 0; // Index de la page active
 
-  final List<Widget> _vins = [
-    //types de vins
+  final List<Widget> _pages = [
+   
   ];
-  // quand on choisit un autre type 
-  void _onTypeTapped(int index) {
+
+  void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
@@ -22,7 +21,31 @@ class MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _vins[_selectedIndex], // Affiche le type voulu
+      body: _pages[_selectedIndex], // Affiche la page sélectionnée
+
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        backgroundColor: Colors.black,
+        selectedItemColor: Color(0xFFD8C3A5), // Beige
+        unselectedItemColor: Colors.grey,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: "Accueil",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.folder), // Icône pour le générateur de recettes
+            label: "Générateur",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: "Favoris",
+          ),
+        ],
+      ),
     );
   }
 }
