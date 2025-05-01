@@ -11,8 +11,13 @@ class AjoutClavierPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cave à vin'),
+        title: Text(
+          'Cave à vin',
+          style: TextStyle(color: Color(0xFFF5F0E6), fontSize: 64),
+        ),
         backgroundColor: Color(0xFF7B1E3A),
+        toolbarHeight: 100,
+        centerTitle: true,
       ),
       body: Padding(
         padding: EdgeInsets.all(16),
