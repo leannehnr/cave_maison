@@ -1,17 +1,28 @@
 import 'package:flutter/material.dart';
-import 'main_page.dart'; // Page d'accueil
+import 'accueil_page.dart';
+import 'ajout_vin.dart';
+import 'ajout_clavier.dart';
 
-void main() async{
-  runApp(MyApp());
+void main() {
+  runApp(CaveAVinApp());
 }
 
-class MyApp extends StatelessWidget{
+class CaveAVinApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context){
-    return MaterialApp(debugShowCheckedModeBanner: false,
-    title: 'Cave à vins', 
-    theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFFF5F0E6)),),
-    home: MainPage(),
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Cave à vin',
+      theme: ThemeData(
+        primaryColor: Color(0xFF7B1E3A),
+        scaffoldBackgroundColor: Color(0xFFFDF8E7),
+        fontFamily: 'Roboto',
+      ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => AccueilPage(),
+        '/ajout': (context) => ChoixAjoutPage(),
+        '/ajout_clavier': (context) => AjoutClavierPage(),
+      },
     );
   }
 }
