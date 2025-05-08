@@ -1,22 +1,88 @@
 import 'package:flutter/material.dart';
 
+class Vin {
+  final int id;
+  final String nom;
+  final String domaine;
+  final int annee;
+  final String couleur;
+  int quantite;
+
+  Vin({
+    required this.id,
+    required this.nom,
+    required this.domaine,
+    required this.annee,
+    required this.couleur,
+    required this.quantite,
+  });
+
+  Vin copyWith({
+    int? id,
+    String? nom,
+    String? domaine,
+    int? annee,
+    String? couleur,
+    int? quantite,
+  }) {
+    return Vin(
+      id: id ?? this.id,
+      nom: nom ?? this.nom,
+      domaine: domaine ?? this.domaine,
+      annee: annee ?? this.annee,
+      couleur: couleur ?? this.couleur,
+      quantite: quantite ?? this.quantite,
+    );
+  }
+
+  factory Vin.fromJson(Map<String, dynamic> json) {
+    return Vin(
+      id: json['id'],
+      nom: json['nom'],
+      domaine: json['domaine'],
+      annee: json['année'],
+      couleur: json['couleur'],
+      quantite: json['quantité'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'nom': nom,
+      'domaine': domaine,
+      'année': annee,
+      'couleur': couleur,
+      'quantité': quantite,
+    };
+  }
+}
+
 class WineCard extends StatelessWidget {
+  final Vin vin;
+  final ValueChanged<int> onQuantityChanged;
+
+  WineCard({required this.vin, required this.onQuantityChanged});
+
   @override
   Widget build(BuildContext context) {
     return Card(
       color: Color(0x66C8B77D),
       child: ListTile(
         leading: Container(width: 40, height: 60, color: Colors.white),
-        title: Text('Caca prout', style: TextStyle(fontSize: 28)),
+        title: Text(vin.nom, style: TextStyle(fontSize: 28)),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Couleur'),
+            Text(vin.couleur),
             Row(
               children: [
-                Text('Année'),
+                Text('${vin.annee}'),
                 Spacer(),
-                QuantityCounter(initialValue: 1, onChanged: (newValue) {}),
+                QuantityCounter(
+                  initialValue: vin.quantite,
+                  onChanged: onQuantityChanged,
+                ),
               ],
             ),
           ],

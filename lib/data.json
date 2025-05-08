@@ -1,0 +1,20 @@
+{
+    "vins": [
+      {
+        "id": 1,
+        "nom": "Château Margaux",
+        "domaine": "Château Margaux",
+        "année": 2015,
+        "couleur": "rouge",
+        "quantité": 6
+      },
+      {
+        "id": 2,
+        "nom": "Corton-Charlemagne Grand Cru",
+        "domaine": "Domaine Bonneau du Martray",
+        "année": 2018,
+        "couleur": "blanc",
+        "quantité": 3
+      }
+    ]
+}
