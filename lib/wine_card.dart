@@ -6,7 +6,7 @@ class Vin {
   final String domaine;
   final int annee;
   final String couleur;
-  int quantite;
+  final int quantite;
 
   Vin({
     required this.id,
@@ -62,7 +62,8 @@ class WineCard extends StatelessWidget {
   final Vin vin;
   final ValueChanged<int> onQuantityChanged;
 
-  WineCard({required this.vin, required this.onQuantityChanged});
+  WineCard({Key? key, required this.vin, required this.onQuantityChanged})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -124,6 +125,15 @@ class _QuantityCounterState extends State<QuantityCounter> {
       widget.onChanged(quantity);
     });
   }
+
+  void didUpdateWidget(covariant QuantityCounter oldWidget) {
+  super.didUpdateWidget(oldWidget);
+  if (oldWidget.initialValue != widget.initialValue) {
+    setState(() {
+      quantity = widget.initialValue;
+    });
+  }
+}
 
   @override
   Widget build(BuildContext context) {

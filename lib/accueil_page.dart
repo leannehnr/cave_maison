@@ -24,27 +24,15 @@ class _AccueilPageState extends State<AccueilPage> {
 
   void chargerVins() async {
     final file = await getLocalFile();
-
     if (await file.exists()) {
       final contents = await file.readAsString();
       final decoded = json.decode(contents) as List;
-      setState(() {
-        vins = decoded.map((e) => Vin.fromJson(e)).toList();
-      });
-    } else {
-      // Fichier inexistant : on le crée avec des données de départ
-      final defaultVins = [
-        Vin(
-          id: 0,
-          nom: "Abcd",
-          domaine: "Efgh",
-          annee: 2015,
-          couleur: "Rouge",
-          quantite: 6,
-        ),
-      ];
-      setState(() => vins = defaultVins);
-      sauvegarderVins(); // Enregistrer immédiatement les données par défaut
+      if (mounted) {
+        // Vérifie si le widget est encore monté
+        setState(() {
+          vins = decoded.map((e) => Vin.fromJson(e)).toList();
+        });
+      }
     }
   }
 
@@ -56,14 +44,13 @@ class _AccueilPageState extends State<AccueilPage> {
 
   void modifierQuantite(int index, int nouvelleQuantite) {
     setState(() {
-      vins[index].quantite = nouvelleQuantite;
+      final vinActuel = vins[index];
+      vins[index] = vinActuel.copyWith(quantite: nouvelleQuantite);
       if (nouvelleQuantite == 0) {
-        vins.removeAt(
-          index,
-        ); // Si la quantité est à 0, on supprime le vin de la liste
+        vins.removeAt(index);
       }
     });
-    sauvegarderVins(); // Sauvegarder les vins après modification
+    sauvegarderVins();
   }
 
   void initState() {
@@ -121,6 +108,7 @@ class _AccueilPageState extends State<AccueilPage> {
               itemBuilder: (context, index) {
                 final vin = vins[index];
                 return WineCard(
+                  key: ValueKey(vin.id),
                   vin: vin,
                   onQuantityChanged: (nouvelleQuantite) {
                     modifierQuantite(
@@ -138,8 +126,10 @@ class _AccueilPageState extends State<AccueilPage> {
         backgroundColor: Color(0xFF7B1E3A),
         child: Icon(Icons.add, color: Color(0xFFF5F0E6), size: 30),
         onPressed: () async {
-          await Navigator.pushNamed(context, '/ajout');
-          chargerVins(); // Recharge les vins au retour
+          final result = await Navigator.pushNamed(context, '/ajout');
+          if (result == true) {
+            chargerVins();
+          }
         },
       ),
     );

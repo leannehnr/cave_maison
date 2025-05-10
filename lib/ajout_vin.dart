@@ -30,8 +30,17 @@ class ChoixAjoutPage extends StatelessWidget {
             ),
             SizedBox(height: 50),
             ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/ajout_clavier');
+              onPressed: () async {
+                final result = await Navigator.pushNamed(
+                  context,
+                  '/ajout_clavier',
+                );
+                if (result == true) {
+                  Navigator.pop(
+                    context,
+                    true,
+                  );
+                }
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Color(0xFF7B1E3A)),

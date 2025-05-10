@@ -94,62 +94,89 @@ class AjoutClavierPage extends StatelessWidget {
             TextField(
               controller: quantiteController,
               decoration: InputDecoration(labelText: 'Quantité'),
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(2),
+              ],
             ),
             SizedBox(height: 20),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF7B1E3A),
+              ),
               onPressed: () async {
-                final nom = nomController.text;
-                final domaine = domaineController.text;
+                final nom = nomController.text.trim();
+                final domaine = domaineController.text.trim();
                 final annee = int.tryParse(anneeController.text) ?? 0;
                 final quantite = int.tryParse(quantiteController.text) ?? 0;
                 final couleur = couleurController;
 
-                // Charger fichier
-                final dir = await getApplicationDocumentsDirectory();
-                final file = File('${dir.path}/data.json');
+                if (couleur != null &&
+                    nom.isNotEmpty &&
+                    domaine.isNotEmpty &&
+                    annee > 0 &&
+                    quantite > 0) {
+                  final dir = await getApplicationDocumentsDirectory();
+                  final file = File('${dir.path}/data.json');
 
-                List<Vin> vins = [];
+                  List<Vin> vins = [];
 
-                if (await file.exists()) {
-                  final contents = await file.readAsString();
-                  vins =
-                      (json.decode(contents) as List)
-                          .map((e) => Vin.fromJson(e))
-                          .toList();
-                }
-                if (couleur != null) {
-                  // Générer un ID unique
-                  final newId =
-                      vins.isEmpty
-                          ? 1
-                          : vins
-                                  .map((v) => v.id)
-                                  .reduce((a, b) => a > b ? a : b) +
-                              1;
+                  if (await file.exists()) {
+                    final contents = await file.readAsString();
+                    vins =
+                        (json.decode(contents) as List)
+                            .map((e) => Vin.fromJson(e))
+                            .toList();
+                  }
 
-                  final nouveauVin = Vin(
-                    id: newId,
-                    nom: nom,
-                    domaine: domaine,
-                    annee: annee,
-                    couleur: couleur,
-                    quantite: quantite,
+                  final index = vins.indexWhere(
+                    (v) =>
+                        v.nom.toLowerCase() == nom.toLowerCase() &&
+                        v.domaine.toLowerCase() == domaine.toLowerCase() &&
+                        v.annee == annee &&
+                        v.couleur.toLowerCase() == couleur.toLowerCase(),
                   );
 
-                  vins.add(nouveauVin);
+                  if (index != -1) {
+                    // Vin existe, on met à jour la quantité
+                    vins[index] = vins[index].copyWith(
+                      quantite: vins[index].quantite + quantite,
+                    );
+                  } else {
+                    final newId =
+                        vins.isEmpty
+                            ? 1
+                            : vins
+                                    .map((v) => v.id)
+                                    .reduce((a, b) => a > b ? a : b) +
+                                1;
 
-                  // Enregistrer
+                    final nouveauVin = Vin(
+                      id: newId,
+                      nom: nom,
+                      domaine: domaine,
+                      annee: annee,
+                      couleur: couleur,
+                      quantite: quantite,
+                    );
+
+                    vins.add(nouveauVin);
+                  }
+
                   final updatedJson = json.encode(
                     vins.map((v) => v.toJson()).toList(),
                   );
                   await file.writeAsString(updatedJson);
 
-                  Navigator.pop(context); // Revenir à la page d'accueil
+                  Navigator.pop(context, true);
                 }
               },
 
-              child: Text('Valider'),
+              child: Text(
+                'Valider',
+                style: TextStyle(color: Color(0xFFF5F0E6)),
+              ),
             ),
           ],
         ),
